@@ -27,6 +27,39 @@ export function Layout({ children }) {
   return (
     <div className="app">
       <div className="shell">
+        <aside className="sidebar">
+          <div className="brand">
+            <img className="brand-mark" src="/devhub-logo.png" alt="DevHub" />
+            DEVHUB
+          </div>
+          <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <Home size={18} /> {t('home')}
+          </NavLink>
+          <NavLink to="/learn" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <Map size={18} /> {t('learn')}
+          </NavLink>
+          {onLesson ? (
+            <button type="button" className="nav-link locked" onClick={() => notify(t('teacherLocked'))}>
+              <Bot size={18} /> {t('teacher')}
+            </button>
+          ) : (
+            <NavLink to="/teacher" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+              <Bot size={18} /> {t('teacher')}
+            </NavLink>
+          )}
+          <NavLink to="/practice" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <BookOpen size={18} /> {t('practice')}
+          </NavLink>
+          {more.map((l) => (
+            <NavLink key={l.to} to={l.to} className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+              <l.icon size={18} /> {l.label}
+            </NavLink>
+          ))}
+          <NavLink to="/profile" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <User size={18} /> {t('profile')}
+          </NavLink>
+        </aside>
+        <div className="shell-main">
         <header className="topbar">
           <div className="mobile-brand">
             <img className="brand-mark" src="/devhub-logo.png" alt="" />
@@ -51,6 +84,7 @@ export function Layout({ children }) {
           </button>
         </header>
         <main className="page">{children}</main>
+        </div>
       </div>
       <nav className="bottom-nav">
         <NavLink to="/" end className={({ isActive }) => (isActive ? 'active' : '')}>
