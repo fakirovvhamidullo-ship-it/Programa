@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const path = require('path')
 const { spawn } = require('child_process')
 const { Pool } = require('pg')
 const initSqlJs = require('sql.js')
@@ -14,15 +15,21 @@ const origins = (process.env.CLIENT_ORIGIN || '')
 app.use(cors(origins.length ? { origin: origins } : {}))
 app.use(express.json({ limit: '1mb' }))
 
+function databaseUrl() {
+  const raw = process.env.DATABASE_URL || ''
+  return raw.replace(/^"|"$/g, '').replace(/([?&])channel_binding=[^&]*/g, '$1').replace(/[?&]$/, '')
+}
+
+const connectionString = databaseUrl()
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL && !/localhost|127\.0\.0\.1/.test(process.env.DATABASE_URL) ? { rejectUnauthorized: false } : false,
+  connectionString,
+  ssl: connectionString && !/localhost|127\.0\.0\.1/.test(connectionString) ? { rejectUnauthorized: false } : false,
 })
 
 let sandbox
 
 async function boot() {
-  if (!process.env.DATABASE_URL) {
+  if (!connectionString) {
     throw new Error('DATABASE_URL is missing. Put the Neon connection string in the Railway variables.')
   }
   await pool.query(`
@@ -61,7 +68,9 @@ async function boot() {
     ])
     await pool.query('INSERT INTO lab_items (name) VALUES ($1)', ['coin'])
   }
-  const SQL = await initSqlJs()
+  const SQL = await initSqlJs({
+    locateFile: (file) => path.join(path.dirname(require.resolve('sql.js')), file),
+  })
   sandbox = new SQL.Database()
   sandbox.run(`
     CREATE TABLE crud_users (id INTEGER PRIMARY KEY, username TEXT, email TEXT, progress INTEGER);
@@ -210,11 +219,7 @@ app.post('/api/python', (req, res) => {
   })
 })
 
-boot()
-  .then(() => {
-    app.listen(PORT, '0.0.0.0', () => console.log('DevHub API on ' + PORT))
-  })
-  .catch((e) => {
-    console.error(e.message)
-    process.exit(1)
-  })
+app.listen(PORT, '0.0.0.0', () => console.log('DevHub API on ' + PORT))
+boot().catch((e) => {
+  console.error(e.message)
+})
