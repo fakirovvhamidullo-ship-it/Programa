@@ -79,7 +79,7 @@ export default function Lesson() {
       <p>{lesson.description}</p>
       <div className="lesson-video">
         <iframe
-          src={`https://www.youtube-nocookie.com/embed/${lessonVideoId(lesson.id)}`}
+          src={`https://www.youtube-nocookie.com/embed/${lessonVideoId(lesson.id)}?hl=ru&rel=0`}
           title={lesson.title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
