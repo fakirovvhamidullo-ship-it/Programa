@@ -1,0 +1,36 @@
+const VIDEOS = {
+  1: 'O5nskjZ_GoI',
+  2: 'O5nskjZ_GoI',
+  3: 'O5nskjZ_GoI',
+  4: 'O5nskjZ_GoI',
+  5: 'O5nskjZ_GoI',
+  6: 'PkZNo7MFNFg',
+  7: 'PkZNo7MFNFg',
+  8: 'PkZNo7MFNFg',
+  9: 'PkZNo7MFNFg',
+  10: 'UB1O30fR-EE',
+  11: 'UB1O30fR-EE',
+  12: 'UB1O30fR-EE',
+  13: 'yfoY53QXEnI',
+  14: 'yfoY53QXEnI',
+  15: 'yfoY53QXEnI',
+  16: 'hdI2bqOjy3c',
+  17: 'hdI2bqOjy3c',
+  18: 'hdI2bqOjy3c',
+  19: 'hdI2bqOjy3c',
+  20: 'hdI2bqOjy3c',
+  21: 'hdI2bqOjy3c',
+  22: 'kqtD5dpn9C8',
+  23: 'rfscVS0vtbw',
+  24: 'rfscVS0vtbw',
+  25: 'rfscVS0vtbw',
+  26: 'Oe421EPjeBE',
+  27: 'Oe421EPjeBE',
+  28: 'HXV3zeQKqGY',
+  29: 'HXV3zeQKqGY',
+  30: 'Oe421EPjeBE',
+}
+
+export function lessonVideoId(id) {
+  return VIDEOS[id] || VIDEOS[1]
+}

@@ -102,9 +102,11 @@ export function QuizView({ part, startAt = 0, startMistakes = 0, onPass, onFail,
                 setHint(q.explain ? `${t('quizOk')} ${q.explain}` : t('quizOk'))
                 window.setTimeout(goNext, 700)
               } else {
-                setFailed(true)
-                setHint(t('quizFail'))
-                onFail?.({ question: i, mistakes: mistakes + 1 })
+                setHint(t('quizBad'))
+                window.setTimeout(() => {
+                  setPicked(null)
+                  setHint(t('quizPickShort'))
+                }, 700)
               }
             }}
           >
@@ -138,9 +140,7 @@ function OrderPractice({ items, answer, startStep = 0, onPass, onFail }) {
     const need = steps[built.length]
     if (step !== need) {
       setErr(true)
-      setFailed(true)
-      setMsg(t('quizFail'))
-      onFail?.({ question: built.length, step: built.length, mistakes: 1 })
+      setMsg(t('quizBad'))
       return
     }
     const next = [...built, step]

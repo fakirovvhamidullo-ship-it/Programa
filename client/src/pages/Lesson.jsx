@@ -4,6 +4,7 @@ import { Button, Card, Modal } from '../components/ui'
 import { InteractiveView, LessonProgress, PracticeView, QuizView, TheoryView } from '../components/lesson'
 import { getLesson } from '../data/lessons'
 import { localizeLesson } from '../data/localizeLesson'
+import { lessonVideoId } from '../data/lessonVideos'
 import { useApp } from '../context/AppContext'
 import { useI18n } from '../i18n/useI18n'
 
@@ -13,14 +14,8 @@ export default function Lesson() {
   const raw = getLesson(id)
   const lesson = localizeLesson(raw, lang)
   const nav = useNavigate()
-  const { user, progress, isLessonUnlocked, failAttempt, saveResume, completePart, completeLesson } = useApp()
+  const { user, progress, isLessonUnlocked, saveResume, completePart, completeLesson } = useApp()
   const [showWin, setShowWin] = useState(false)
-  const [now, setNow] = useState(() => Date.now())
-
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(timer)
-  }, [])
 
   const startIdx = useMemo(() => {
     if (!lesson) return 0
@@ -55,44 +50,6 @@ export default function Lesson() {
     )
   }
 
-  const until = lesson ? progress.retryUntil?.[lesson.id] : 0
-  const locked = typeof until === 'number' && now < until
-  if (locked) {
-    const spotLock = progress.resumeAt?.[lesson.id] || {}
-    const piece = lesson.parts[spotLock.part]
-    const qIndex = spotLock.question || 0
-    const word =
-      piece?.type === 'quiz'
-        ? piece.questions?.[qIndex]?.q
-        : piece?.answer?.[spotLock.step ?? qIndex]
-    const day = spotLock.lastLock === 'day'
-    const early = lesson.id <= 5
-    const leftMs = Math.max(0, until - now)
-    const totalSec = Math.ceil(leftMs / 1000)
-    const hh = Math.floor(totalSec / 3600)
-    const mm = Math.floor((totalSec % 3600) / 60)
-    const ss = totalSec % 60
-    const clock = `${hh}:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`
-    return (
-      <Card style={{ padding: 24 }}>
-        <h2>{t('attemptUsed')}</h2>
-        <p>{day ? (early ? t('waitDay') : t('waitDayLate')) : t('waitHour')}</p>
-        {word ? <p className="callout">{word}</p> : null}
-        {!day && early ? (
-          <p>
-            {t('pauseCount')}: {spotLock.hourStrikes || 0} / 10
-          </p>
-        ) : null}
-        <p>
-          {t('waitLeft')}: {clock}
-        </p>
-        <Link to="/learn">
-          <Button>{t('toMap')}</Button>
-        </Link>
-      </Card>
-    )
-  }
-
   const spot = progress.resumeAt?.[lesson.id] || {}
   const part = lesson.parts[idx]
   const key = `${lesson.id}:${part.id}`
@@ -120,6 +77,14 @@ export default function Lesson() {
         {t('lesson')} {lesson.id}. {lesson.title}
       </h1>
       <p>{lesson.description}</p>
+      <div className="lesson-video">
+        <iframe
+          src={`https://www.youtube-nocookie.com/embed/${lessonVideoId(lesson.id)}`}
+          title={lesson.title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      </div>
       <Card className="callout" style={{ padding: 14 }}>
         <b>{t('howTitle')}</b>
         <p style={{ margin: '8px 0 0' }}>{t('how3')}</p>
@@ -154,7 +119,6 @@ export default function Lesson() {
               startStep={spot.step || 0}
               onRun={() => {}}
               onPass={() => finishPart()}
-              onFail={(s) => failAttempt(lesson.id, { part: idx, ...(s || {}) })}
             />
           )}
           {part.type === 'quiz' && (
@@ -165,7 +129,6 @@ export default function Lesson() {
               startMistakes={spot.mistakes || 0}
               onProgress={(s) => saveResume?.(lesson.id, { part: idx, ...s })}
               onPass={(e) => finishPart(e)}
-              onFail={(s) => failAttempt(lesson.id, { part: idx, ...(s || {}) })}
             />
           )}
           {done && part.type !== 'theory' && (
