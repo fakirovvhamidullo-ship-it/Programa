@@ -364,7 +364,7 @@ export function PracticePage() {
       <div className="mt">
         {tab === 'web' && (
           <WebEditor
-            initial={{ html: '<h1>Hello DevHub</h1>', css: 'h1{color:#6ee7ff}', js: 'console.log("run")' }}
+            initial={{ html: '<h1>Hello DevHub</h1>', css: 'h1{color:#6ee7ff}', js: 'console.log("Привет")' }}
             onRun={() => {
               markFirstCode()
               completeDaily('dailyCode')

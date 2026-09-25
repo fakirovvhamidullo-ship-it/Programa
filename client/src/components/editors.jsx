@@ -21,9 +21,9 @@ export function WebEditor({ initial, onRun, checks = [], anyCheck, onPass }) {
   const [html, setHtml] = useState(initial?.html || '')
   const [css, setCss] = useState(initial?.css || '')
   const [js, setJs] = useState(initial?.js || '')
-  const [src, setSrc] = useState('')
   const [log, setLog] = useState('')
   const [ok, setOk] = useState(false)
+  const frame = useMemo(() => ({ el: null }), [])
 
   const doc = useMemo(
     () => `<!doctype html><html><head><style>${css}</style></head><body>${html}<script>
@@ -36,7 +36,11 @@ try { ${js} } catch(e) { parent.postMessage({t:'log', m: String(e)}, '*') }
 
   useEffect(() => {
     const h = (e) => {
-      if (e.data?.t === 'log') setLog((s) => s + e.data.m + '\n')
+      if (e.data?.t !== 'log' || typeof e.data.m !== 'string') return
+      setLog((s) => {
+        const next = `${s}${e.data.m}\n`
+        return next.length > 1500 ? next.slice(-1500) : next
+      })
     }
     window.addEventListener('message', h)
     return () => window.removeEventListener('message', h)
@@ -44,7 +48,8 @@ try { ${js} } catch(e) { parent.postMessage({t:'log', m: String(e)}, '*') }
 
   const run = () => {
     setLog('')
-    setSrc(doc + `<!-- ${Date.now()} -->`)
+    setOk(false)
+    if (frame.el) frame.el.srcdoc = doc
     onRun?.()
     const blob = `${html}\n${css}\n${js}`.toLowerCase()
     const pass = checks.length
@@ -61,11 +66,6 @@ try { ${js} } catch(e) { parent.postMessage({t:'log', m: String(e)}, '*') }
     if (pass) onPass?.()
     setPane('preview')
   }
-
-  useEffect(() => {
-    const t = setTimeout(() => setSrc(doc), 280)
-    return () => clearTimeout(t)
-  }, [doc])
 
   const value = tab === 'html' ? html : tab === 'css' ? css : js
   const setValue = tab === 'html' ? setHtml : tab === 'css' ? setCss : setJs
@@ -111,7 +111,7 @@ try { ${js} } catch(e) { parent.postMessage({t:'log', m: String(e)}, '*') }
         </div>
         <div className="console">LIVE CONSOLE{'\n'}{log || (ok ? 'Проверка практики: ок' : '')}</div>
       </div>
-      <iframe title="preview" className="preview" sandbox="allow-scripts" srcDoc={src} />
+      <iframe title="preview" className="preview" sandbox="allow-scripts" ref={(el) => { frame.el = el }} />
     </div>
   )
 }
