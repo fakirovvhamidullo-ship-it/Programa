@@ -240,6 +240,8 @@ button { cursor: pointer; }
   padding: 8px 10px 18px;
   font-weight: 800;
   letter-spacing: 0.12em;
+  color: var(--text);
+  font-size: 18px;
 }
 .brand-mark {
   width: 36px;
@@ -1088,7 +1090,8 @@ canvas.game { width: 100%; max-width: 720px; background: #050a14; border-radius:
   background: transparent;
   color: var(--text);
 }
-[data-theme='light'] .desk { background: #f5f7fb; }
+[data-theme='light'] .brand,
+[data-theme='light'] .mobile-brand { color: #0f172a; }
 
 @media (min-width: 700px) {
   .phone .page { padding: 16px 22px 24px; }
@@ -1101,6 +1104,7 @@ canvas.game { width: 100%; max-width: 720px; background: #050a14; border-radius:
   .phone .sidebar { display: flex; height: auto; position: relative; overflow: auto; }
   .phone .shell-main { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
   .phone .bottom-nav { display: none; }
+  .phone .mobile-brand { display: none; }
   .phone .topbar .icon-btn[aria-label] { display: none; }
   .phone .ref-grid { grid-template-columns: repeat(3, 1fr); }
   .phone .hero { padding: 36px 28px 24px; }
