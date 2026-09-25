@@ -365,16 +365,19 @@ export function AppProvider({ children }) {
         return p
       }
       notify(`Куплено: ${item.name}`)
+      const slot = item.type === 'effect' ? 'effect' : item.type
       return evaluateAchievements({
         ...p,
         ownedItems: [...p.ownedItems, id],
         devCoins: p.devCoins - item.price,
+        equipped: { ...p.equipped, [slot]: id },
       })
     })
   }
 
   const equip = (slot, id) => {
     setProgress((p) => ({ ...p, equipped: { ...p.equipped, [slot]: id } }))
+    if (id !== 'default') notify('Надето')
   }
 
   const resetProgress = () => {

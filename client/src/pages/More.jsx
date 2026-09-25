@@ -332,8 +332,12 @@ export function ShopPage() {
               <p className="muted">{it.desc}</p>
               <p>{it.price} 🪙</p>
               {own ? (
-                <Button variant="ghost" onClick={() => equip(it.type === 'effect' ? 'effect' : it.type, it.id)}>
-                  Надеть
+                <Button
+                  variant="ghost"
+                  disabled={progress.equipped?.[it.type === 'effect' ? 'effect' : it.type] === it.id}
+                  onClick={() => equip(it.type === 'effect' ? 'effect' : it.type, it.id)}
+                >
+                  {progress.equipped?.[it.type === 'effect' ? 'effect' : it.type] === it.id ? 'Надето' : 'Надеть'}
                 </Button>
               ) : (
                 <Button onClick={() => buyItem(it.id)}>Купить</Button>

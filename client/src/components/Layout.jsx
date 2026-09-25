@@ -69,7 +69,11 @@ export function Layout({ children }) {
             <button
               type="button"
               className="tg-theme"
-              onClick={() => app.setSettings?.({ ...settings, theme: settings.theme === 'light' ? 'default' : 'light' })}
+              onClick={() => {
+                const next = settings.theme === 'light' ? 'default' : 'light'
+                app.setSettings?.({ ...settings, theme: next })
+                app.equip?.('theme', 'default')
+              }}
             >
               {settings.theme === 'light' ? <Moon size={22} strokeWidth={1.75} /> : <Sun size={22} strokeWidth={1.75} />}
               {settings.theme === 'light' ? t('themeNight') : t('themeDay')}

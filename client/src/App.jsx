@@ -31,7 +31,9 @@ function Frame({ children }) {
   const app = useApp()
   if (!app?.progress) return null
   const { progress, settings } = app
-  const theme = progress.equipped?.theme === 'theme-ember' ? 'ember' : progress.equipped?.theme === 'theme-matrix' ? 'matrix' : settings.theme
+  const shop = progress.equipped?.theme
+  const theme =
+    shop === 'theme-ember' ? 'ember' : shop === 'theme-matrix' ? 'matrix' : shop === 'theme-aurora' ? 'default' : settings.theme === 'light' ? 'light' : 'default'
   return (
     <div className={`desk ${settings.animations ? '' : 'reduce-motion'}`} style={{ '--font-scale': settings.fontScale }}>
       <div className="phone" data-theme={theme}>

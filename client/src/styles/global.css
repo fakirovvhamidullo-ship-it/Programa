@@ -733,6 +733,14 @@ button { cursor: pointer; }
 .avatar.gold { border-color: var(--gold); box-shadow: 0 0 16px rgba(251,191,36,.45); }
 .avatar.neon { border-color: var(--pink); box-shadow: 0 0 16px rgba(244,114,182,.5); }
 .avatar.spark { position: relative; }
+.avatar.spark::after {
+  content: '✦';
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  font-size: 14px;
+  color: #fde68a;
+}
 .profile-head { display: flex; gap: 18px; align-items: center; padding: 22px; }
 
 .ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 10px; }
@@ -794,7 +802,8 @@ button { cursor: pointer; }
 }
 .pc-part:hover, .pc-part.on { transform: translateY(-3px); box-shadow: 0 0 20px rgba(110,231,255,.25); }
 
-.illu { width: 100%; height: 148px; display: block; overflow: hidden; }
+.code-wrap.editor-dracula textarea { background: #282a36; color: #f8f8f2; }
+.code-wrap.editor-solar textarea { background: #fdf6e3; color: #073642; }
 .cover-badge { display: grid; place-items: center; }
 .cover-badge .block-icon { width: 88px; height: 88px; border-radius: 26px; }
 .lesson-video { position: relative; width: 100%; padding-top: 56.25%; margin: 12px 0 16px; border-radius: 16px; overflow: hidden; background: #000; }

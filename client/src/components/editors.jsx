@@ -2,12 +2,20 @@ import { useEffect, useMemo, useState } from 'react'
 import { Copy, Play, RotateCcw } from 'lucide-react'
 import { Button } from './ui'
 import { runPythonSmart } from '../lib/python'
+import { useApp } from '../context/AppContext'
+
+function useEditorTheme() {
+  const id = useApp()?.progress?.equipped?.editor
+  if (id === 'editor-dracula' || id === 'editor-solar') return id
+  return ''
+}
 
 function lines(text) {
   return text.split('\n').length
 }
 
 export function WebEditor({ initial, onRun, checks = [], anyCheck, onPass }) {
+  const editorSkin = useEditorTheme()
   const [tab, setTab] = useState('html')
   const [pane, setPane] = useState('code')
   const [html, setHtml] = useState(initial?.html || '')
@@ -93,7 +101,7 @@ try { ${js} } catch(e) { parent.postMessage({t:'log', m: String(e)}, '*') }
             <Copy size={14} /> Копировать
           </button>
         </div>
-        <div className="code-wrap">
+        <div className={`code-wrap ${editorSkin}`}>
           <div className="gutter">
             {Array.from({ length: lines(value) }, (_, i) => (
               <div key={i}>{i + 1}</div>
@@ -109,6 +117,7 @@ try { ${js} } catch(e) { parent.postMessage({t:'log', m: String(e)}, '*') }
 }
 
 export function JsConsole({ starter, expect = [], onPass, onRun }) {
+  const editorSkin = useEditorTheme()
   const [code, setCode] = useState(starter)
   const [out, setOut] = useState('')
   const [ok, setOk] = useState(false)
@@ -135,7 +144,7 @@ export function JsConsole({ starter, expect = [], onPass, onRun }) {
   }
   return (
     <div className="glass" style={{ padding: 12 }}>
-      <div className="code-wrap">
+      <div className={`code-wrap ${editorSkin}`}>
         <div className="gutter">
           {Array.from({ length: lines(code) }, (_, i) => (
             <div key={i}>{i + 1}</div>
@@ -161,6 +170,7 @@ export function JsConsole({ starter, expect = [], onPass, onRun }) {
 }
 
 export function PythonEditor({ starter, expect = [], onPass, onRun }) {
+  const editorSkin = useEditorTheme()
   const [code, setCode] = useState(starter)
   const [out, setOut] = useState('')
   const [err, setErr] = useState('')
@@ -175,7 +185,7 @@ export function PythonEditor({ starter, expect = [], onPass, onRun }) {
   }
   return (
     <div className="glass" style={{ padding: 12 }}>
-      <div className="code-wrap">
+      <div className={`code-wrap ${editorSkin}`}>
         <div className="gutter">
           {Array.from({ length: lines(code) }, (_, i) => (
             <div key={i}>{i + 1}</div>
