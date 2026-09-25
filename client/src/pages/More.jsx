@@ -318,30 +318,21 @@ export function ReferencePage() {
 }
 
 export function ShopPage() {
-  const { progress, buyItem, equip } = useApp()
+  const { progress, buyItem } = useApp()
   return (
     <div>
       <h1>Магазин DevCoins</h1>
-      <p>Баланс: 🪙 {progress.devCoins}. Покупки не нужны для прохождения курса.</p>
+      <p>Баланс: 🪙 {progress.devCoins}. Покупай сколько нужно. На курс это не влияет.</p>
       <div className="ref-grid">
         {SHOP_ITEMS.map((it) => {
-          const own = progress.ownedItems.includes(it.id)
+          const have = progress.supplies?.[it.id] || 0
           return (
             <Card key={it.id} className="term">
               <b>{it.name}</b>
               <p className="muted">{it.desc}</p>
+              <p>У тебя: {have}</p>
               <p>{it.price} 🪙</p>
-              {own ? (
-                <Button
-                  variant="ghost"
-                  disabled={progress.equipped?.[it.type === 'effect' ? 'effect' : it.type] === it.id}
-                  onClick={() => equip(it.type === 'effect' ? 'effect' : it.type, it.id)}
-                >
-                  {progress.equipped?.[it.type === 'effect' ? 'effect' : it.type] === it.id ? 'Надето' : 'Надеть'}
-                </Button>
-              ) : (
-                <Button onClick={() => buyItem(it.id)}>Купить</Button>
-              )}
+              <Button onClick={() => buyItem(it.id)}>Купить</Button>
             </Card>
           )
         })}

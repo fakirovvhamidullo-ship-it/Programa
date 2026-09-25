@@ -17,17 +17,8 @@ export const ACHIEVEMENTS = [
 ]
 
 export const SHOP_ITEMS = [
-  { id: 'theme-aurora', type: 'theme', name: 'Aurora', price: 40, desc: 'Бирюзово-фиолетовая тема' },
-  { id: 'theme-ember', type: 'theme', name: 'Ember', price: 40, desc: 'Тёплые оранжевые акценты' },
-  { id: 'theme-matrix', type: 'theme', name: 'Matrix', price: 50, desc: 'Зелёный терминальный неон' },
-  { id: 'avatar-fox', type: 'avatar', name: 'Fox', price: 25, desc: 'Аватар-лис' },
-  { id: 'avatar-bot', type: 'avatar', name: 'Bot', price: 25, desc: 'Аватар-робот' },
-  { id: 'avatar-star', type: 'avatar', name: 'Nova', price: 25, desc: 'Звёздный аватар' },
-  { id: 'frame-gold', type: 'frame', name: 'Gold Frame', price: 35, desc: 'Золотая рамка профиля' },
-  { id: 'frame-neon', type: 'frame', name: 'Neon Frame', price: 35, desc: 'Неоновая рамка' },
-  { id: 'fx-spark', type: 'effect', name: 'Sparkles', price: 45, desc: 'Искры вокруг аватара' },
-  { id: 'editor-dracula', type: 'editor', name: 'Dracula Editor', price: 30, desc: 'Тема редактора кода' },
-  { id: 'editor-solar', type: 'editor', name: 'Solar Editor', price: 30, desc: 'Светлая солнечная тема редактора' },
+  { id: 'hint', type: 'supply', name: 'Подсказка', price: 15, desc: 'На тесте один раз покажет, почему ответ неверный.' },
+  { id: 'doubleXp', type: 'supply', name: 'Двойной опыт', price: 30, desc: 'Следующий пройденный урок даст 200 XP вместо 100.' },
 ]
 
 export const DAILY_QUESTS = [

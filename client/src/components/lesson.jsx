@@ -6,6 +6,7 @@ import { GameArena } from './GameArena'
 import { BLOCKS } from '../data/levels'
 import { localRequest, runLocalSql } from '../lib/localApi'
 import { useI18n } from '../i18n/useI18n'
+import { useApp } from '../context/AppContext'
 
 export function TheoryView({ part }) {
   return (
@@ -31,6 +32,7 @@ export function TheoryView({ part }) {
 
 export function QuizView({ part, startAt = 0, startMistakes = 0, onPass, onFail, onProgress }) {
   const { t } = useI18n()
+  const { takeHint } = useApp()
   const [i, setI] = useState(Math.min(startAt, Math.max(0, (part.questions?.length || 1) - 1)))
   const [picked, setPicked] = useState(null)
   const [done, setDone] = useState(false)
@@ -102,7 +104,8 @@ export function QuizView({ part, startAt = 0, startMistakes = 0, onPass, onFail,
                 setHint(q.explain ? `${t('quizOk')} ${q.explain}` : t('quizOk'))
                 window.setTimeout(goNext, 700)
               } else {
-                setHint(t('quizBad'))
+                const helped = takeHint()
+                setHint(helped && q.explain ? q.explain : t('quizBad'))
                 window.setTimeout(() => {
                   setPicked(null)
                   setHint(t('quizPickShort'))

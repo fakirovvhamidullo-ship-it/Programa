@@ -22,6 +22,7 @@ function emptyProgress() {
     achievements: [],
     completedProjects: [],
     ownedItems: [],
+    supplies: { hint: 0, doubleXp: 0 },
     equipped: { theme: 'default', avatar: 'default', frame: 'none', effect: 'none', editor: 'night' },
     flags: {},
     daily: { date: todayKey() },
@@ -330,7 +331,8 @@ export function AppProvider({ children }) {
         ...p,
         completedLessons: [...p.completedLessons, lessonId],
         currentDay: Math.max(p.currentDay, lessonId + 1),
-        xp: p.xp + 100,
+        xp: p.xp + ((p.supplies?.doubleXp || 0) > 0 ? 200 : 100),
+        supplies: (p.supplies?.doubleXp || 0) > 0 ? { ...p.supplies, doubleXp: p.supplies.doubleXp - 1 } : p.supplies,
         lastLessonDate: today,
         streak,
         unlockDates,
@@ -359,22 +361,29 @@ export function AppProvider({ children }) {
     const item = SHOP_ITEMS.find((s) => s.id === id)
     if (!item) return
     setProgress((p) => {
-      if (p.ownedItems.includes(id)) return p
       if (p.devCoins < item.price) {
         notify('Не хватает DevCoins')
         return p
       }
-      notify(`Куплено: ${item.name}`)
-      const slot = item.type === 'effect' ? 'effect' : item.type
+      const stock = { ...(p.supplies || {}), [item.id]: (p.supplies?.[item.id] || 0) + 1 }
+      notify(`Куплено: ${item.name}. Теперь их ${stock[item.id]}`)
       return evaluateAchievements({
         ...p,
-        ownedItems: [...p.ownedItems, id],
+        supplies: stock,
+        ownedItems: p.ownedItems.includes(id) ? p.ownedItems : [...p.ownedItems, id],
         devCoins: p.devCoins - item.price,
-        equipped: { ...p.equipped, [slot]: id },
       })
     })
   }
 
+  const takeHint = () => {
+    if ((progress.supplies?.hint || 0) < 1) return false
+    setProgress((p) => ({
+      ...p,
+      supplies: { ...(p.supplies || {}), hint: Math.max(0, (p.supplies?.hint || 0) - 1) },
+    }))
+    return true
+  }
   const equip = (slot, id) => {
     setProgress((p) => ({ ...p, equipped: { ...p.equipped, [slot]: id } }))
     if (id !== 'default') notify('Надето')
@@ -421,6 +430,7 @@ export function AppProvider({ children }) {
     completeLesson,
     completeProject,
     buyItem,
+    takeHint,
     equip,
     resetProgress,
     grantXp,
@@ -450,6 +460,7 @@ export function useApp() {
     completePart: () => {},
     completeLesson: () => {},
     notify: () => {},
+    takeHint: () => false,
     level: { level: 1, name: 'Новичок', progress: 0 },
   }
 }
