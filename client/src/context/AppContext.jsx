@@ -170,10 +170,7 @@ export function AppProvider({ children }) {
 
   const isLessonUnlocked = (id) => {
     if (id === 1) return true
-    if (!progress.completedLessons.includes(id - 1)) return false
-    const unlock = progress.unlockDates?.[id]
-    if (!unlock) return false
-    return todayKey() >= unlock
+    return progress.completedLessons.includes(id - 1)
   }
 
   const isAttemptLocked = (id) => {
@@ -328,7 +325,7 @@ export function AppProvider({ children }) {
       let streak = 1
       if (p.lastLessonDate === today) streak = p.streak
       else if (p.lastLessonDate === addDays(today, -1)) streak = (p.streak || 0) + 1
-      const unlockDates = { ...p.unlockDates, [lessonId + 1]: addDays(today, 1) }
+      const unlockDates = { ...p.unlockDates, [lessonId + 1]: today }
       let next = {
         ...p,
         completedLessons: [...p.completedLessons, lessonId],

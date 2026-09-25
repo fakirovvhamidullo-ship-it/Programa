@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom'
-import { Lock } from 'lucide-react'
 import { Card } from '../components/ui'
 import { Illu } from '../components/Illustrations'
 import { BlockIcon } from '../components/BlockIcon'
+import { LessonBadge } from '../components/LessonBadge'
 import { BLOCKS } from '../data/levels'
-import { LESSONS } from '../data/lessons'
-import { localizeLesson } from '../data/localizeLesson'
 import { useApp } from '../context/AppContext'
 import { useI18n } from '../i18n/useI18n'
 
@@ -27,7 +25,6 @@ export default function Learn() {
             </h2>
             <div className="nodes">
               {b.lessons.map((id) => {
-                const lesson = localizeLesson(LESSONS[id - 1], lang)
                 const done = progress.completedLessons.includes(id)
                 const unlocked = isLessonUnlocked(id)
                 const current = unlocked && !done
@@ -40,8 +37,7 @@ export default function Learn() {
                       if (!unlocked) e.preventDefault()
                     }}
                   >
-                    {done ? '✓' : unlocked ? id : <Lock size={16} />}
-                    <div>{lesson.title.split(' ')[0]}</div>
+                    <LessonBadge id={id} lang={lang} done={done} locked={!unlocked} />
                   </Link>
                 )
               })}
