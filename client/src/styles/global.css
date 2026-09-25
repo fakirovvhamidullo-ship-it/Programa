@@ -892,6 +892,7 @@ button { cursor: pointer; }
 }
 
 @media (max-width: 700px) {
+  .tg-theme { font-size: 13px; gap: 6px; }
   .grid-stats { grid-template-columns: 1fr 1fr; gap: 8px; }
   .stat { padding: 12px; }
   .stat b { font-size: 18px; }
@@ -1049,7 +1050,20 @@ canvas.game { width: 100%; max-width: 720px; background: #050a14; border-radius:
 .phone .mobile-brand { display: flex; }
 .phone .topbar-tools { display: flex; align-items: center; gap: 6px; }
 .phone .search-mini { grid-column: 1 / -1; max-width: none; }
-.icon-btn { min-height: 36px; padding: 6px 10px; border-radius: 12px; }
+.tg-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  color: #3390ec;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 6px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.tg-theme:hover { background: rgba(51, 144, 236, 0.1); }
 .phone .hero { padding: 20px 14px 16px; min-height: 0; }
 .phone .hero h1 { font-size: 40px; letter-spacing: 0.04em; }
 .phone .hero .lead { font-size: 18px; }

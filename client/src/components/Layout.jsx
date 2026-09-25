@@ -1,6 +1,6 @@
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { BookOpen, Bot, Home, Map, Medal, Menu, Search, Settings, ShoppingBag, Trophy, User, X } from 'lucide-react'
+import { BookOpen, Bot, Home, Map, Medal, Menu, Moon, Search, Settings, ShoppingBag, Sun, Trophy, User, X } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import { useI18n } from '../i18n/useI18n'
 import { LangSwitch } from '../i18n/LangSwitch'
@@ -68,10 +68,11 @@ export function Layout({ children }) {
           <div className="topbar-tools">
             <button
               type="button"
-              className="btn ghost icon-btn"
+              className="tg-theme"
               onClick={() => app.setSettings?.({ ...settings, theme: settings.theme === 'light' ? 'default' : 'light' })}
             >
-              {settings.theme === 'light' ? t('themeDark') : t('themeLight')}
+              {settings.theme === 'light' ? <Moon size={22} strokeWidth={1.75} /> : <Sun size={22} strokeWidth={1.75} />}
+              {settings.theme === 'light' ? t('themeNight') : t('themeDay')}
             </button>
             <LangSwitch compact />
             <button type="button" className="btn ghost icon-btn" onClick={() => setMoreOpen(true)} aria-label={t('moreMenu')}>
