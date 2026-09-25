@@ -601,9 +601,12 @@ button { cursor: pointer; }
   resize: none;
   color: #d6e6ff;
 }
+.editor.show-code { grid-template-columns: 1fr; }
+.editor.show-code .preview { display: none; }
 .preview {
-  background: white;
+  background: #0a1020;
   min-height: 280px;
+  border: 0;
 }
 .console {
   font-family: var(--mono);

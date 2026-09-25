@@ -26,7 +26,7 @@ export function WebEditor({ initial, onRun, checks = [], anyCheck, onPass }) {
   const frame = useMemo(() => ({ el: null }), [])
 
   const doc = useMemo(
-    () => `<!doctype html><html><head><style>${css}</style></head><body>${html}<script>
+    () => `<!doctype html><html><head><style>html,body{margin:0;background:#0a1020;color:#e8eefc;font-family:sans-serif}${css}</style></head><body>${html}<script>
 const _c = console;
 console.log = (...a) => { parent.postMessage({t:'log', m: a.join(' ')}, '*'); _c.log(...a)};
 try { ${js} } catch(e) { parent.postMessage({t:'log', m: String(e)}, '*') }
