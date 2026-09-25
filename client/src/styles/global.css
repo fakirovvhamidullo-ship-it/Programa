@@ -829,7 +829,35 @@ button { cursor: pointer; }
 .lesson-video { position: relative; width: 100%; padding-top: 56.25%; margin: 12px 0 16px; border-radius: 16px; overflow: hidden; background: #000; }
 .lesson-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 .mobile-brand { display: none; }
-.editor-mobile-switch { display: none; }
+.editor-mobile-switch {
+  display: none;
+  gap: 6px;
+  margin: 10px 10px 0;
+  padding: 4px;
+  grid-column: 1 / -1;
+  background: #0c1222;
+  border: 1px solid rgba(110, 231, 255, 0.28);
+  border-radius: 999px;
+}
+.editor-mobile-switch button {
+  flex: 1;
+  min-height: 36px;
+  background: transparent;
+  color: #93a0c0;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 700;
+}
+.editor-mobile-switch button.on {
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  color: #061018;
+}
+[data-theme='light'] .editor-mobile-switch {
+  background: #e8eef8;
+  border-color: rgba(3, 105, 161, 0.28);
+}
+[data-theme='light'] .editor-mobile-switch button { color: #475569; }
+[data-theme='light'] .editor-mobile-switch button.on { color: #fff; }
 
 @media (max-width: 960px) {
   .shell { grid-template-columns: 1fr; }
@@ -882,15 +910,7 @@ button { cursor: pointer; }
     margin: 0;
     min-height: 44px;
   }
-  .editor-mobile-switch { display: none; }
-  .editor-mobile-switch button {
-    flex: 1;
-    min-height: 44px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid var(--stroke);
-    border-radius: 12px;
-  }
-  .editor-mobile-switch button.on { background: rgba(110,231,255,.16); }
+  .editor-mobile-switch { display: flex; }
   .editor.show-code .preview { display: none; }
   .editor.show-preview .editor-code { display: none; }
   .editor { min-height: 0; }
@@ -1103,7 +1123,7 @@ canvas.game { width: 100%; max-width: 720px; background: #050a14; border-radius:
 .phone .grid-stats { grid-template-columns: 1fr 1fr; }
 .phone .part-list { display: flex; gap: 8px; overflow-x: auto; }
 .phone .part-list button { width: auto; flex: 0 0 auto; white-space: nowrap; margin: 0; }
-.phone .editor-mobile-switch { display: none; }
+.phone .editor-mobile-switch { display: flex; }
 .phone .auth { min-height: 0; flex: 1; overflow: auto; align-items: start; padding: 16px 12px 24px; }
 .more-sheet {
   position: absolute;
