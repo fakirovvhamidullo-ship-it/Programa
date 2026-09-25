@@ -5,6 +5,7 @@ import { useApp } from '../context/AppContext'
 import { useI18n } from '../i18n/useI18n'
 import { LangSwitch } from '../i18n/LangSwitch'
 import { AiTeacher } from './AiTeacher'
+import { InstallPhone } from './InstallPhone'
 
 export function Layout({ children }) {
   const app = useApp()
@@ -88,7 +89,10 @@ export function Layout({ children }) {
             <span className="muted search-hint">{t('search')}</span>
           </button>
         </header>
-        <main className="page">{children}</main>
+        <main className="page">
+          <InstallPhone />
+          {children}
+        </main>
         </div>
       </div>
       <nav className="bottom-nav">

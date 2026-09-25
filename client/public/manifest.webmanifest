@@ -2,10 +2,13 @@
   "name": "DEVHUB",
   "short_name": "DEVHUB",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#070b14",
   "theme_color": "#070b14",
   "icons": [
-    { "src": "/devhub-logo.png", "sizes": "192x192", "type": "image/png", "purpose": "any" }
+    { "src": "/devhub-logo-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/devhub-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/devhub-logo-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
