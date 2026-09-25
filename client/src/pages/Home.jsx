@@ -1,19 +1,10 @@
 import { Link } from 'react-router-dom'
 import { Button, Card } from '../components/ui'
 import { Illu } from '../components/Illustrations'
+import { BlockIcon } from '../components/BlockIcon'
 import { BLOCKS } from '../data/levels'
 import { useApp } from '../context/AppContext'
 import { useI18n } from '../i18n/useI18n'
-
-const path = [
-  ['🖥', 'block_computer'],
-  ['🧠', 'block_programming'],
-  ['🌐', 'block_web'],
-  ['🎮', 'block_games'],
-  ['🐍', 'block_python'],
-  ['🗄', 'block_backend'],
-  ['🏆', 'block_final'],
-]
 
 export default function Home() {
   const { user } = useApp()
@@ -54,12 +45,12 @@ export default function Home() {
       </div>
       <h2 className="mt">{t('yourPath')}</h2>
       <div className="path">
-        {path.map(([e, key], i) => (
-          <Card key={key} className="path-item">
-            <div className="path-emoji">{e}</div>
+        {BLOCKS.map((b, i) => (
+          <Card key={b.id} className="path-item" style={{ '--accent': b.color }}>
+            <BlockIcon id={b.id} size={22} />
             <div>
-              <b>{t(key)}</b>
-              {i < path.length - 1 && <div className="muted">↓</div>}
+              <b>{t(`block_${b.id}`)}</b>
+              {i < BLOCKS.length - 1 && <div className="muted">↓</div>}
             </div>
           </Card>
         ))}
@@ -74,7 +65,8 @@ export default function Home() {
             </div>
             <div className="block-body">
               <h3>
-                {b.emoji} {t(`block_${b.id}`)}
+                <BlockIcon id={b.id} />
+                {t(`block_${b.id}`)}
               </h3>
               <p className="muted">
                 {t('lessonsRange')} {b.lessons[0]}–{b.lessons.at(-1)}

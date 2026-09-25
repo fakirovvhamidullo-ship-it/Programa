@@ -346,7 +346,7 @@ button { cursor: pointer; }
   gap: 12px;
   padding: 14px 16px;
 }
-.path-emoji { font-size: 28px; text-align: center; }
+.path-item .block-icon { width: 44px; height: 44px; border-radius: 14px; margin: 0 auto; }
 
 .grid-stats {
   display: grid;
@@ -691,7 +691,19 @@ button { cursor: pointer; }
   text-shadow: 0 1px 8px color-mix(in srgb, var(--accent, var(--cyan)) 45%, transparent);
 }
 .block-body { padding: 14px 16px 16px; }
-.block-body h3 { margin: 0 0 4px; font-size: 18px; }
+.block-body h3 { margin: 0 0 4px; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+.block-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  color: var(--accent, var(--cyan));
+  background: linear-gradient(160deg, color-mix(in srgb, var(--accent, var(--cyan)) 30%, transparent), color-mix(in srgb, var(--accent, var(--cyan)) 8%, transparent));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent, var(--cyan)) 48%, transparent);
+}
+.map .block h2 { display: flex; align-items: center; gap: 10px; }
 .block-body p { margin: 0; }
 .term { padding: 12px; }
 .term b { font-family: var(--mono); color: var(--cyan); }

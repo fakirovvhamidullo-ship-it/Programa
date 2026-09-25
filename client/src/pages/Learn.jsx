@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { Lock } from 'lucide-react'
 import { Card } from '../components/ui'
 import { Illu } from '../components/Illustrations'
+import { BlockIcon } from '../components/BlockIcon'
 import { BLOCKS } from '../data/levels'
 import { LESSONS } from '../data/lessons'
 import { localizeLesson } from '../data/localizeLesson'
@@ -17,10 +18,12 @@ export default function Learn() {
       <p className="muted">{t('mapHint')}</p>
       <div className="map">
         {BLOCKS.map((b) => (
-          <Card key={b.id} className="block">
+          <Card key={b.id} className="block" style={{ '--accent': b.color }}>
             <Illu type={b.id === 'final' ? 'final' : b.id} />
             <h2>
-              {b.index} {b.emoji} {t(`block_${b.id}`)}
+              <span className="muted">{b.index}</span>
+              <BlockIcon id={b.id} />
+              {t(`block_${b.id}`)}
             </h2>
             <div className="nodes">
               {b.lessons.map((id) => {
