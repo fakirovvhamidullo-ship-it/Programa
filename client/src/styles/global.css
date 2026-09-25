@@ -725,7 +725,11 @@ button { cursor: pointer; }
   display: grid; place-items: center; font-size: 36px;
   background: linear-gradient(135deg, #1b2440, #0b1020);
   border: 3px solid var(--cyan);
+  overflow: hidden;
 }
+.avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.avatar-pick { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; cursor: pointer; }
+.avatar-pick input { display: none; }
 .avatar.gold { border-color: var(--gold); box-shadow: 0 0 16px rgba(251,191,36,.45); }
 .avatar.neon { border-color: var(--pink); box-shadow: 0 0 16px rgba(244,114,182,.5); }
 .avatar.spark { position: relative; }

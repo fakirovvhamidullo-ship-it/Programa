@@ -40,12 +40,13 @@ export function AvatarView({ user, progress, size = 84 }) {
   const frame = progress.equipped?.frame || 'none'
   const fx = progress.equipped?.effect
   const letter = (user?.username || '?')[0].toUpperCase()
+  const photo = user?.photo
   return (
     <div
       className={`avatar ${frame === 'frame-gold' ? 'gold' : ''} ${frame === 'frame-neon' ? 'neon' : ''} ${fx === 'fx-spark' ? 'spark' : ''}`}
       style={{ width: size, height: size, fontSize: size / 2.4 }}
     >
-      {av === 'default' ? letter : map[av.replace('avatar-', '')] || letter}
+      {photo ? <img src={photo} alt="" /> : av === 'default' ? letter : map[av.replace('avatar-', '')] || letter}
     </div>
   )
 }

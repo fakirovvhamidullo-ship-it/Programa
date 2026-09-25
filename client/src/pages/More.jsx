@@ -12,19 +12,71 @@ import { GameArena } from '../components/GameArena'
 import { Illu } from '../components/Illustrations'
 
 export function Profile() {
-  const { user, progress, level, logout, updateProfile } = useApp()
+  const { user, progress, level, logout, updateProfile, notify } = useApp()
+  const { t } = useI18n()
   const [form, setForm] = useState({ username: user?.username || '', email: user?.email || '', password: '' })
   if (!user) return <Navigate to="/auth" />
+
+  const pickPhoto = (file) => {
+    if (!file || !file.type.startsWith('image/')) return
+    const img = new Image()
+    const url = URL.createObjectURL(file)
+    img.onload = () => {
+      const max = 256
+      const scale = Math.min(max / img.width, max / img.height, 1)
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.max(1, Math.round(img.width * scale))
+      canvas.height = Math.max(1, Math.round(img.height * scale))
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height)
+      URL.revokeObjectURL(url)
+      updateProfile({ photo: canvas.toDataURL('image/jpeg', 0.82) })
+    }
+    img.onerror = () => {
+      URL.revokeObjectURL(url)
+      notify(t('photoBad'))
+    }
+    img.src = url
+  }
+
   return (
     <div>
       <Card className="profile-head">
-        <AvatarView user={user} progress={progress} />
+        <label className="avatar-pick">
+          <AvatarView user={user} progress={progress} />
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              pickPhoto(e.target.files?.[0])
+              e.target.value = ''
+            }}
+          />
+        </label>
         <div className="grow">
           <h1>{user.username}</h1>
           <p className="muted">
             Level {level.level} · {level.name} · {progress.profile?.bio}
           </p>
           <ProgressBar value={level.progress} />
+          <div className="row" style={{ marginTop: 10, gap: 8 }}>
+            <label className="btn ghost">
+              {t('photoPick')}
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => {
+                  pickPhoto(e.target.files?.[0])
+                  e.target.value = ''
+                }}
+              />
+            </label>
+            {user.photo ? (
+              <Button variant="ghost" onClick={() => updateProfile({ photo: '' })}>
+                {t('photoRemove')}
+              </Button>
+            ) : null}
+          </div>
         </div>
         <Button variant="ghost" onClick={logout}>
           Выход
