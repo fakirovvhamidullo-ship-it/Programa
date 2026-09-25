@@ -64,7 +64,6 @@ try { ${js} } catch(e) { parent.postMessage({t:'log', m: String(e)}, '*') }
       : true
     setOk(pass)
     if (pass) onPass?.()
-    setPane('preview')
   }
 
   const value = tab === 'html' ? html : tab === 'css' ? css : js

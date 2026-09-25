@@ -882,12 +882,7 @@ button { cursor: pointer; }
     margin: 0;
     min-height: 44px;
   }
-  .editor-mobile-switch {
-    display: flex;
-    gap: 8px;
-    padding: 10px 10px 0;
-    grid-column: 1 / -1;
-  }
+  .editor-mobile-switch { display: none; }
   .editor-mobile-switch button {
     flex: 1;
     min-height: 44px;
@@ -1108,7 +1103,7 @@ canvas.game { width: 100%; max-width: 720px; background: #050a14; border-radius:
 .phone .grid-stats { grid-template-columns: 1fr 1fr; }
 .phone .part-list { display: flex; gap: 8px; overflow-x: auto; }
 .phone .part-list button { width: auto; flex: 0 0 auto; white-space: nowrap; margin: 0; }
-.phone .editor-mobile-switch { display: flex; }
+.phone .editor-mobile-switch { display: none; }
 .phone .auth { min-height: 0; flex: 1; overflow: auto; align-items: start; padding: 16px 12px 24px; }
 .more-sheet {
   position: absolute;
