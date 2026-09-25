@@ -157,11 +157,11 @@
   box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent, #0369a1) 62%, #0f172a);
 }
 
-* { box-sizing: border-box; scrollbar-width: thin; scrollbar-color: #24566c #0c1222; }
+* { box-sizing: border-box; scrollbar-width: thin; scrollbar-color: #6ee7ff #0c1222; }
 *::-webkit-scrollbar { width: 10px; height: 10px; }
 *::-webkit-scrollbar-track { background: #0c1222; }
-*::-webkit-scrollbar-thumb { background: #24566c; border-radius: 999px; }
-*::-webkit-scrollbar-thumb:hover { background: #6ee7ff; }
+*::-webkit-scrollbar-thumb { background: #6ee7ff; border-radius: 999px; }
+*::-webkit-scrollbar-thumb:hover { background: #9aefff; }
 *::-webkit-scrollbar-corner { background: #0c1222; }
 [data-theme='light'] * { scrollbar-color: #94a3b8 #e8eef8; }
 [data-theme='light'] *::-webkit-scrollbar-track,
@@ -610,11 +610,14 @@ button { cursor: pointer; }
   line-height: 1.5;
   resize: none;
   color: #d6e6ff;
-  overflow-x: hidden;
-  scrollbar-width: none;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #6ee7ff #0c1222;
   color-scheme: dark;
 }
-.code-wrap textarea::-webkit-scrollbar { display: none; height: 0; width: 0; }
+.code-wrap textarea::-webkit-scrollbar { height: 8px; width: 8px; display: block; }
+.code-wrap textarea::-webkit-scrollbar-track { background: #0c1222; }
+.code-wrap textarea::-webkit-scrollbar-thumb { background: #6ee7ff; border-radius: 999px; }
 .editor.show-code { grid-template-columns: 1fr; }
 .editor.show-code .preview { display: none; }
 .preview {
