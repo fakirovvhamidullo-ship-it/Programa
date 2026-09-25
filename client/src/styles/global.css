@@ -168,7 +168,8 @@
 [data-theme='light'] *::-webkit-scrollbar-corner { background: #e8eef8; }
 [data-theme='light'] *::-webkit-scrollbar-thumb { background: #94a3b8; }
 html, body, #root { min-height: 100%; }
-html { font-size: calc(16px * var(--font-scale, 1)); }
+html { font-size: calc(16px * var(--font-scale, 1)); color-scheme: dark; }
+[data-theme='light'] { color-scheme: light; }
 body {
   margin: 0;
   font-family: var(--font);
@@ -609,7 +610,11 @@ button { cursor: pointer; }
   line-height: 1.5;
   resize: none;
   color: #d6e6ff;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  color-scheme: dark;
 }
+.code-wrap textarea::-webkit-scrollbar { display: none; height: 0; width: 0; }
 .editor.show-code { grid-template-columns: 1fr; }
 .editor.show-code .preview { display: none; }
 .preview {
