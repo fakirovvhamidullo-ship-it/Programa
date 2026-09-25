@@ -112,9 +112,38 @@
 [data-theme='light'] .bottom-nav a.active {
   background: rgba(3, 105, 161, 0.08);
 }
-[data-theme='light'] .block-card:hover {
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.1);
+[data-theme='light'] .hero {
+  background:
+    radial-gradient(520px 240px at 100% 0%, rgba(109, 40, 217, 0.14), transparent 62%),
+    radial-gradient(460px 220px at 0% 100%, rgba(3, 105, 161, 0.16), transparent 58%),
+    #fff;
 }
+[data-theme='light'] .float-code {
+  color: #0f172a;
+  background: #f8fafc;
+  border-color: rgba(3, 105, 161, 0.25);
+}
+[data-theme='light'] .chip-float.cpu { color: #0369a1; background: #e0f2fe; }
+[data-theme='light'] .chip-float.ram { color: #6d28d9; background: #ede9fe; }
+.how-card {
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.how-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  font-weight: 800;
+  color: #061018;
+  background: linear-gradient(135deg, var(--cyan), var(--violet));
+}
+[data-theme='light'] .how-num { color: #fff; }
+[data-theme='light'] .how-card b { color: #0f172a; font-weight: 650; line-height: 1.35; }
 [data-theme='light'] .node {
   color: #0f172a;
   background: #fff;

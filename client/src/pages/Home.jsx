@@ -37,9 +37,10 @@ export default function Home() {
       </Card>
       <h2 className="mt">{t('howTitle')}</h2>
       <div className="ref-grid">
-        {[t('how1'), t('how2'), t('how3'), t('how4')].map((line) => (
-          <Card key={line} style={{ padding: 16 }}>
-            <b>{line}</b>
+        {[t('how1'), t('how2'), t('how3'), t('how4')].map((line, i) => (
+          <Card key={line} className="how-card">
+            <span className="how-num">{i + 1}</span>
+            <b>{line.replace(/^\d+\.\s*/, '')}</b>
           </Card>
         ))}
       </div>
