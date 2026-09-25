@@ -13,8 +13,6 @@ function Badge({ id, color, children }) {
         </linearGradient>
       </defs>
       <ellipse cx="180" cy="78" rx="110" ry="72" fill={`url(#${id}-glow)`} />
-      <path d="M128 96l-16 46 24-12 6 14 16-48" fill={color} opacity="0.9" />
-      <path d="M232 96l16 46-24-12-6 14-16-48" fill={color} opacity="0.72" />
       <circle cx="180" cy="74" r="62" fill="none" stroke={color} strokeWidth="1.5" opacity="0.35" />
       <circle cx="180" cy="74" r="54" fill="var(--cover-panel)" stroke={`url(#${id}-ring)`} strokeWidth="5" />
       <circle cx="180" cy="74" r="44" fill="var(--cover-deep)" />
