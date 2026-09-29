@@ -141,10 +141,50 @@ export function AppProvider({ children }) {
       (u) => u.email.toLowerCase() === ident.toLowerCase() || u.username.toLowerCase() === ident.toLowerCase(),
     )
     if (!found) throw new Error('notFound')
+    if (found.googleSub && !found.passwordHash) throw new Error('googleOnly')
     const hash = await hashPassword(password, found.salt)
     if (hash !== found.passwordHash) throw new Error('badPass')
     setSessionId(found.id)
     notify(`${settings.language === 'en' ? 'Welcome back' : settings.language === 'tg' ? 'Бозгашт муборак' : 'С возвращением'}, ${found.username}`)
+  }
+
+  const loginWithGoogle = async ({ email, name, sub }) => {
+    const cleanEmail = String(email || '').trim().toLowerCase()
+    const googleSub = String(sub || '').trim()
+    if (!cleanEmail || !googleSub) throw new Error('googleFail')
+    const existing = users.find((u) => u.googleSub === googleSub || u.email.toLowerCase() === cleanEmail)
+    const lang = settings.language
+    if (existing) {
+      const account = existing.googleSub === googleSub ? existing : { ...existing, googleSub }
+      if (account !== existing) persistUsers(users.map((u) => (u.id === existing.id ? account : u)))
+      setSessionId(account.id)
+      notify(`${lang === 'en' ? 'Welcome back' : lang === 'tg' ? 'Бозгашт муборак' : 'С возвращением'}, ${account.username}`)
+      return account
+    }
+    const base = String(name || cleanEmail.split('@')[0] || 'user')
+      .trim()
+      .split(/\s+/)[0]
+      .replace(/[^\p{L}\p{N}]/gu, '')
+      .slice(0, 18) || 'user'
+    let username = base
+    let n = 2
+    while (users.some((u) => u.username.toLowerCase() === username.toLowerCase())) {
+      username = `${base}${n}`
+      n += 1
+    }
+    const account = {
+      id: uid(),
+      username,
+      email: cleanEmail,
+      googleSub,
+      passwordHash: '',
+      salt: '',
+      createdAt: Date.now(),
+    }
+    persistUsers([...users, account])
+    setSessionId(account.id)
+    notify(lang === 'en' ? 'Account created. Welcome to DevHub!' : lang === 'tg' ? 'Ҳисоб сохта шуд. Хуш омадӣ ба DevHub!' : 'Аккаунт создан. Добро пожаловать в DevHub!')
+    return account
   }
 
   const logout = () => {
@@ -308,7 +348,7 @@ export function AppProvider({ children }) {
         },
         daily: p.daily?.dailyPart ? p.daily : { ...p.daily, date: todayKey(), dailyPart: true, awardedPart: true },
       }
-      if (!already) {
+        if (!already) {
         const add = xpMap[part.type] || 20
         next.xp += add
         next.awarded = { ...next.awarded, [`part:${key}`]: true }
@@ -420,6 +460,7 @@ export function AppProvider({ children }) {
     shiftAchievement: () => setAchievementQueue((q) => q.slice(1)),
     register,
     login,
+    loginWithGoogle,
     logout,
     updateProfile,
     isLessonUnlocked,

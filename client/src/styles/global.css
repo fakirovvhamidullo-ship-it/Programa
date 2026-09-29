@@ -730,6 +730,35 @@ button { cursor: pointer; }
   padding: 24px;
 }
 .auth-card { width: min(440px, 100%); padding: 28px; }
+.google-btn {
+  width: 100%;
+  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 999px;
+  padding: 12px 16px;
+  background: #fff;
+  color: #1f1f1f;
+  font-weight: 700;
+  border: 1px solid #dadce0;
+}
+.google-btn:disabled { opacity: 0.6; }
+.auth-or {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0 4px;
+  color: var(--muted, #8ea0b8);
+  font-size: 13px;
+}
+.auth-or::before, .auth-or::after {
+  content: '';
+  height: 1px;
+  background: var(--stroke, rgba(255,255,255,.12));
+}
 .field { display: grid; gap: 6px; margin: 10px 0; }
 .field input, .field select, .field textarea {
   background: rgba(255,255,255,.04);
