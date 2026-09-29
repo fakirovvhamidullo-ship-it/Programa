@@ -9,8 +9,6 @@ export default function TeacherPage() {
       <h1>
         <Bot size={28} style={{ verticalAlign: 'middle' }} /> {t('teacherTitle')}
       </h1>
-      <p className="muted">{t('teacherSub')}</p>
-      <p className="muted">{t('teacherHint')}</p>
       <AiTeacher embedded />
     </div>
   )

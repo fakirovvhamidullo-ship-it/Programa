@@ -493,7 +493,7 @@ function chatLine(q, lang) {
   const t = q.replace(/[!?.,]+/g, ' ').replace(/\s+/g, ' ').trim()
   const short = t.length < 40
   if (short && /^(привет|прив|хай|хей|здравствуй|здрасте|добрый день|добрый вечер|доброе утро|hello|hi|hey|good morning|good evening|салом|ассалом|assalom)/.test(t)) {
-    return pick(M('Привет! Что вам нужно?', 'Hi! What do you need?', 'Салом! Ба шумо чӣ лозим?'), lang)
+    return pick(M('Привет. Спрашивайте что угодно — я отвечу.', 'Hi. Ask anything — I will answer.', 'Салом. Ҳар чизеро пурсед — ҷавоб медиҳам.'), lang)
   }
   if (/как дела|как ты|как пожива|how are you|чи хел|чи хал/.test(t)) {
     return pick(
@@ -510,9 +510,9 @@ function chatLine(q, lang) {
   if (/кто ты|что ты умеешь|что ты можешь|что можешь|who are you|what can you/.test(t)) {
     return pick(
       M(
-        'Я учитель DevHub. Напишите, что вам нужно.\n\nМогу полностью объяснить программирование: переменные, if, циклы, функции, HTML, CSS, JavaScript, Python, сайты, API, базы SQL и Git. Могу разобрать ваш код и показать, где ошибка.',
-        'I am the DevHub teacher. Tell me what you need.\n\nI can explain programming in full: variables, if, loops, functions, HTML, CSS, JavaScript, Python, websites, APIs, SQL, and Git. I can also read your code and show the mistake.',
-        'Ман муаллими DevHub ҳастам. Нависед, ба шумо чӣ лозим.\n\nБарномасозиро пурра мефаҳмонам ва коди шуморо мехонам.',
+        'Я учитель DevHub. Спрашивайте что угодно: школу, жизнь, языки и программирование. Если пришлёте код, разберу его по строкам и покажу ошибку.',
+        'I am the DevHub teacher. Ask anything: school, everyday life, languages, and programming. If you paste code, I will walk through the lines and show the mistake.',
+        'Ман муаллими DevHub ҳастам. Ҳар саволро пурсед: мактаб, ҳаёт, забонҳо ва барномасозӣ. Агар код гузоред, сатр ба сатр мефаҳмонам.',
       ),
       lang,
     )
@@ -535,13 +535,133 @@ function asChat(text, q, lang) {
   return lead + text
 }
 
-function fallback(raw, lang) {
-  const topic = raw.trim().slice(0, 160)
+const FACTS = [
+  T(['столица франц', 'paris', 'париж', 'capital of france'], 'Столица Франции — Париж.', 'The capital of France is Paris.', 'Пойтахти Фаронса — Париж.'),
+  T(['столица росс', 'москва', 'capital of russia'], 'Столица России — Москва.', 'The capital of Russia is Moscow.', 'Пойтахти Русия — Москва.'),
+  T(['столица таджик', 'душанбе', 'capital of tajik'], 'Столица Таджикистана — Душанбе.', 'The capital of Tajikistan is Dushanbe.', 'Пойтахти Тоҷикистон — Душанбе.'),
+  T(['столица сша', 'washington', 'вашингтон', 'capital of the usa', 'capital of america'], 'Столица США — Вашингтон.', 'The capital of the USA is Washington.', 'Пойтахти ИМА — Вашингтон.'),
+  T(['земля', 'earth', 'замин', 'планета'], 'Земля — планета, на которой мы живём. Она вращается вокруг Солнца примерно за 365 дней и вокруг своей оси за сутки.', 'Earth is the planet we live on. It goes around the Sun in about 365 days and spins once a day.', 'Замин сайёраест, ки мо дар он зиндагӣ мекунем. Вай дар як сол гирди Офтоб ва дар як шабонарӯз гирди худ давр мезанад.'),
+  T(['солнце', 'sun', 'офтоб'], 'Солнце — звезда в центре нашей системы. Оно даёт Земле свет и тепло.', 'The Sun is the star at the center of our system. It gives Earth light and heat.', 'Офтоб ситораест дар маркази системаи мо. Вай ба Замин рӯшноӣ ва гармӣ медиҳад.'),
+  T(['луна', 'moon', 'моҳ'], 'Луна — спутник Земли. Мы видим её, потому что она отражает свет Солнца.', 'The Moon is Earth’s satellite. We see it because it reflects the Sun’s light.', 'Моҳ ҳамроҳи Замин аст. Мо онро мебинем, чунки нури Офтобро инъикос мекунад.'),
+  T(['вода', 'water'], 'Вода — жидкость, без которой люди не живут. Формула H2O: два атома водорода и один атом кислорода. Кипит при 100 °C, лёд — при 0 °C.', 'Water is the liquid people cannot live without. Its formula is H2O: two hydrogen atoms and one oxygen atom. It boils at 100 °C and freezes at 0 °C.', 'Об моеъест, ки бе он одам зинда намемонад. Формулааш H2O. Дар 100 °C меҷӯшад, дар 0 °C ях мекунад.'),
+  T(['небо', 'sky', 'голубое', 'осмон'], 'Небо выглядит голубым, потому что воздух сильнее рассеивает синий свет Солнца, чем красный. Поэтому днём мы видим голубой цвет.', 'The sky looks blue because air scatters the Sun’s blue light more than red light. That is the color we see in the daytime.', 'Осмон кабуд менамояд, чунки ҳаво нури кабуди Офтобро бештар пароканда мекунад.'),
+  T(['континент', 'continent', 'қитъа'], 'На Земле 7 континентов: Азия, Африка, Северная Америка, Южная Америка, Антарктида, Европа и Австралия.', 'Earth has 7 continents: Asia, Africa, North America, South America, Antarctica, Europe, and Australia.', 'Дар Замин 7 қитъа ҳаст: Осиё, Африқо, Амрикои Шимолӣ, Амрикои Ҷанубӣ, Антарктида, Аврупо ва Австралия.'),
+  T(['океан', 'ocean', 'уқёнус'], 'Самый большой океан — Тихий. Ещё есть Атлантический, Индийский и Северный Ледовитый.', 'The largest ocean is the Pacific. There are also the Atlantic, Indian, and Arctic oceans.', 'Калонтарин уқёнус — Уқёнуси Ором. Боз Атлантика, Ҳинд ва Яхбастаи Шимолӣ ҳастанд.'),
+  T(['сутки', 'часов в дне', 'hours in a day', '24 час'], 'В сутках 24 часа. В неделе 7 дней. В году 12 месяцев и обычно 365 дней, в високосном — 366.', 'A day has 24 hours. A week has 7 days. A year has 12 months and usually 365 days, or 366 in a leap year.', 'Дар як шабонарӯз 24 соат. Дар ҳафта 7 рӯз. Дар сол 12 моҳ ва одатан 365 рӯз.'),
+  T(['число пи', 'число π', 'what is pi', 'число pi'], 'Число пи примерно равно 3,14159. Это отношение длины окружности к её диаметру.', 'Pi is about 3.14159. It is the ratio of a circle’s circumference to its diameter.', 'Адади пи тақрибан 3,14159 аст. Ин таносуби дарозии давра ба диаметри он аст.'),
+  T(['скорость света', 'speed of light'], 'Свет в пустоте летит примерно 300 000 километров в секунду.', 'Light in empty space travels about 300,000 kilometers per second.', 'Нур дар холӣ тақрибан 300 000 километр дар як сония меравад.'),
+  T(['школа', 'school', 'мактаб'], 'Школа — место, где учатся читать, считать и понимать мир. Урок идёт по теме, потом проверяют, что получилось запомнить.', 'School is where people learn to read, count, and understand the world. A lesson follows a topic, then you check what you remember.', 'Мактаб ҷойест, ки хондан, ҳисоб ва фаҳмидани оламро меомӯзанд.'),
+  T(['друг', 'friend', 'дӯст', 'дуст'], 'Друг — человек, с которым тебе спокойно, которому можно рассказать и на которого можно положиться.', 'A friend is someone you feel calm with, someone you can talk to and rely on.', 'Дӯст одаме аст, ки бо ӯ оромӣ, бо ӯ гап задан ва ба ӯ такя кардан мумкин.'),
+  T(['дождь', 'rain', 'борон'], 'Дождь — это вода, которая падает из туч. Вода испаряется, собирается в облака и потом возвращается на землю.', 'Rain is water falling from clouds. Water evaporates, gathers in clouds, and then comes back to the ground.', 'Борон обест, ки аз абр меборад. Об бухор мешавад, дар абр ҷамъ мешавад ва боз ба замин меояд.'),
+  T(['кошка', 'cat', 'гурба'], 'Кошка — домашнее животное. Она млекопитающее: дышит лёгкими и кормит котят молоком.', 'A cat is a pet. It is a mammal: it breathes with lungs and feeds kittens with milk.', 'Гурба ҳайвони хонагӣ аст. Вай ширхӯр аст.'),
+  T(['собака', 'dog', 'саг'], 'Собака — домашнее животное. Она слышит лучше человека и понимает команды, которым её научили.', 'A dog is a pet. It hears better than a person and understands the commands it was taught.', 'Саг ҳайвони хонагӣ аст. Вай аз одам беҳтар мешунавад.'),
+  T(['таджикск', 'тоҷикӣ', 'точики', 'tajik language'], 'Таджикский язык — язык Таджикистана. Его пишут кириллицей. «Салом» значит «привет».', 'Tajik is the language of Tajikistan. It is written in Cyrillic. “Салом” means “hello”.', 'Забони тоҷикӣ забони Тоҷикистон аст. Онро бо кириллӣ менависанд. «Салом» яъне «привет».'),
+  T(['английск', 'english language'], 'Английский язык пишут латиницей. Hello — «привет», thank you — «спасибо», yes — «да», no — «нет».', 'English is written in the Latin alphabet. Hello means “привет”, thank you means “спасибо”, yes means “да”, no means “нет”.', 'Забони англисӣ бо ҳарфҳои лотинӣ навишта мешавад. Hello — «салом», thank you — «рахмат».'),
+  T(['русск', 'russian language'], 'Русский язык пишут кириллицей. Привет — hello, спасибо — thank you, да — yes, нет — no.', 'Russian is written in Cyrillic. Привет means hello, спасибо means thank you, да means yes, нет means no.', 'Забони русӣ бо кириллӣ навишта мешавад. Привет — салом, спасибо — раҳмат.'),
+  T(['интернет', 'internet'], 'Интернет — сеть, которая соединяет компьютеры по всему миру. Сайт открывается, когда браузер запрашивает страницу у сервера.', 'The Internet is a network that connects computers around the world. A site opens when the browser asks a server for the page.', 'Интернет шабакаест, ки компютерҳои ҷаҳонро мепайвандад.'),
+  T(['гравитац', 'gravity', 'притяжен'], 'Гравитация — притяжение. Поэтому предметы падают на землю, а Луна не улетает от Земли.', 'Gravity is attraction. That is why things fall to the ground and the Moon stays near Earth.', 'Гравитация ҷазб аст. Барои ҳамин чизҳо ба замин меафтанд.'),
+  T(['человек', 'сколько кост', 'human body', 'одам'], 'Человек думает мозгом, дышит лёгкими и качает кровь сердцем. В теле взрослого около 206 костей.', 'A person thinks with the brain, breathes with the lungs, and the heart pumps blood. An adult body has about 206 bones.', 'Одам бо майна фикр мекунад, бо шуш нафас мегирад, дил хунро меронад. Дар бадани калонсол тақрибан 206 устухон ҳаст.'),
+  T(['фотосинтез', 'photosynthesis'], 'Фотосинтез — процесс, которым растения на свету делают себе еду из воды и углекислого газа и выделяют кислород.', 'Photosynthesis is how plants, in light, make food from water and carbon dioxide and release oxygen.', 'Фотосинтез равандест, ки растанӣ дар рӯшноӣ аз об ва гази карбон ғизо месозад ва оксиген медиҳад.'),
+]
+
+function evalMath(expr) {
+  const s = expr.replace(/\s/g, '')
+  let i = 0
+  const peek = () => s[i]
+  const number = () => {
+    const start = i
+    while (i < s.length && /[0-9.]/.test(s[i])) i += 1
+    if (start === i) throw new Error('n')
+    const n = Number(s.slice(start, i))
+    if (!Number.isFinite(n)) throw new Error('n')
+    return n
+  }
+  const factor = () => {
+    if (peek() === '+') { i += 1; return factor() }
+    if (peek() === '-') { i += 1; return -factor() }
+    if (peek() === '(') {
+      i += 1
+      const v = add()
+      if (peek() !== ')') throw new Error(')')
+      i += 1
+      return v
+    }
+    return number()
+  }
+  const mul = () => {
+    let v = factor()
+    while (peek() === '*' || peek() === '/') {
+      const op = s[i]
+      i += 1
+      const r = factor()
+      if (op === '/' && r === 0) throw new Error('0')
+      v = op === '*' ? v * r : v / r
+    }
+    return v
+  }
+  const add = () => {
+    let v = mul()
+    while (peek() === '+' || peek() === '-') {
+      const op = s[i]
+      i += 1
+      const r = mul()
+      v = op === '+' ? v + r : v - r
+    }
+    return v
+  }
+  const value = add()
+  if (i !== s.length || !Number.isFinite(value)) throw new Error('end')
+  return Number.isInteger(value) ? String(value) : String(Math.round(value * 1000) / 1000)
+}
+
+function safeCalc(q) {
+  const cleaned = q.replace(/сколько будет|сколько|посчитай|calculate|what is|чи мешавад|чанд/g, ' ')
+  const expr = (cleaned.match(/[\d\s+\-*/().,]+/) || [''])[0].replace(/,/g, '.').trim()
+  if (!expr || !/\d/.test(expr) || !/[+\-*/]/.test(expr)) return ''
+  if (!/^[\d+\-*/().\s]+$/.test(expr)) return ''
+  try {
+    return evalMath(expr)
+  } catch {
+    return ''
+  }
+}
+
+function knownFact(q, lang) {
+  const fact = FACTS.map((item) => {
+    let score = 0
+    for (const k of item.keys) if (hasKey(q, k)) score += k.length
+    return { item, score }
+  })
+    .filter((x) => x.score > 0)
+    .sort((a, b) => b.score - a.score)[0]
+  if (fact) return pick(fact.item.a, lang)
+
+  const math = safeCalc(q)
+  if (math) return pick(M(`Получается ${math}.`, `The result is ${math}.`, `Натиҷа ${math}.`), lang)
+
+  if (/который час|сколько времени|what time|соат чанд|time is it/.test(q)) {
+    const clock = new Date().toLocaleTimeString(lang === 'en' ? 'en-GB' : lang === 'tg' ? 'tg-TJ' : 'ru-RU', { hour: '2-digit', minute: '2-digit' })
+    return pick(M(`Сейчас ${clock}.`, `It is ${clock}.`, `Ҳозир ${clock}.`), lang)
+  }
+
+  if (/какое сегодня число|какая сегодня дата|какой сегодня день|what is the date|what day is it|имруз кадом руз|имруз чанд/.test(q)) {
+    const day = new Date().toLocaleDateString(lang === 'en' ? 'en-GB' : lang === 'tg' ? 'tg-TJ' : 'ru-RU')
+    return pick(M(`Сегодня ${day}.`, `Today is ${day}.`, `Имрӯз ${day}.`), lang)
+  }
+
+  return ''
+}
+
+function anyQuestion(raw, q, lang) {
+  const known = knownFact(q, lang)
+  if (known) return known
+
+  const topic = raw.trim().slice(0, 240)
   return pick(
     M(
-      `Пока нет точного термина для «${topic}».\n\nСпроси так:\n• что такое функция / массив / API\n• как написать цикл for\n• или вставь 3–10 строк кода\n\nЯ разберу по строкам и покажу исправление.`,
-      `No exact term for “${topic}” yet.\n\nAsk like this:\n• what is a function / array / API\n• how to write a for loop\n• or paste 3–10 lines of code\n\nI will walk through it and show a fix.`,
-      `Барои «${topic}» истилоҳи дақиқ нест.\n\nПурс: функсия чист? ё 3–10 сатри кодро гузор.`,
+      `По вопросу «${topic}» отвечу прямо: готового проверенного факта у меня нет, поэтому выдумывать не буду.\n\nМогу сразу ответить на школу, жизнь, языки, счёт и программирование. Напишите вопрос короче или вставьте код — разберу его.`,
+      `On “${topic}” I will be direct: I do not have a checked fact, so I will not invent one.\n\nI can answer school, everyday life, languages, arithmetic, and programming right away. Write the question shorter, or paste code and I will read it.`,
+      `Дар бораи «${topic}» рост мегӯям: факти санҷидашуда надорам, бинобар ин бофта намекунам.\n\nМактаб, ҳаёт, забонҳо, ҳисоб ва барномасозиро ҳозир ҷавоб медиҳам. Саволро кӯтоҳтар нависед ё кодро гузоред.`,
     ),
     lang,
   )
@@ -550,7 +670,7 @@ function fallback(raw, lang) {
 export function askTeacher(raw, lang = 'ru', lessonId, history) {
   const q = norm(raw)
   if (!q.trim()) {
-    return pick(M('Привет! Что вам нужно?', 'Hi! What do you need?', 'Салом! Ба шумо чӣ лозим?'), lang)
+    return pick(M('Привет. Спрашивайте что угодно — я отвечу.', 'Hi. Ask anything — I will answer.', 'Салом. Ҳар чизеро пурсед — ҷавоб медиҳам.'), lang)
   }
 
   const hello = chatLine(q, lang)
@@ -568,6 +688,9 @@ export function askTeacher(raw, lang = 'ru', lessonId, history) {
 
   const recipe = howTo(q, lang)
   if (recipe) return asChat(recipe, q, lang)
+
+  const known = knownFact(q, lang)
+  if (known) return known
 
   const current = /текущ|current|ҳозир|хозир|этот урок|this lesson|ин дарс|урок\s*\d+|lesson\s*\d+|дарс\s*\d+/.test(q)
   const idFromText = Number((q.match(/(?:урок|lesson|дарс)\s*(\d+)/) || [])[1])
@@ -618,5 +741,5 @@ export function askTeacher(raw, lang = 'ru', lessonId, history) {
     }
   }
 
-  return asChat(fallback(raw, lang), q, lang)
+  return asChat(anyQuestion(raw, q, lang), q, lang)
 }

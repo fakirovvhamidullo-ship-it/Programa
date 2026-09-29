@@ -20,8 +20,7 @@ export function AiTeacher({ embedded = false } = {}) {
   const lessonId = loc.pathname.startsWith('/lesson/') ? Number(loc.pathname.split('/')[2]) : null
   const [messages, setMessages] = useState([])
   const logRef = useRef(null)
-  const hello = t('teacherHello')
-  const shown = messages.length ? messages : [{ role: 'ai', text: hello }]
+  const shown = messages
   const canFollow = messages.some((m) => m.role === 'user')
 
   useEffect(() => {
@@ -31,9 +30,9 @@ export function AiTeacher({ embedded = false } = {}) {
   const send = (q) => {
     const question = (q ?? text).trim()
     if (!question) return
-    const history = messages.length ? messages : [{ role: 'ai', text: hello }]
+    const history = messages
     const answer = askTeacher(question, lang, lessonId, history)
-    setMessages((m) => [...(m.length ? m : [{ role: 'ai', text: hello }]), { role: 'user', text: question }, { role: 'ai', text: answer }])
+    setMessages((m) => [...m, { role: 'user', text: question }, { role: 'ai', text: answer }])
     setText('')
   }
 
@@ -62,9 +61,6 @@ export function AiTeacher({ embedded = false } = {}) {
           </div>
         </div>
       )}
-      <p className="muted" style={{ margin: '0 0 8px', fontSize: 13 }}>
-        {t('teacherSub')}
-      </p>
       <div className="teacher-log" ref={logRef} style={embedded ? { maxHeight: 420 } : undefined}>
         {shown.map((m, i) => (
           <div key={i} className={`teacher-msg ${m.role}`}>
