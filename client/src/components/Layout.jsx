@@ -70,14 +70,16 @@ export function Layout({ children }) {
             <button
               type="button"
               className="tg-theme"
+              aria-label={settings.theme === 'light' ? t('themeNight') : t('themeDay')}
+              title={settings.theme === 'light' ? t('themeNight') : t('themeDay')}
               onClick={() => {
                 const next = settings.theme === 'light' ? 'default' : 'light'
                 app.setSettings?.({ ...settings, theme: next })
                 app.equip?.('theme', 'default')
               }}
             >
-              {settings.theme === 'light' ? <Moon size={22} strokeWidth={1.75} /> : <Sun size={22} strokeWidth={1.75} />}
-              {settings.theme === 'light' ? t('themeNight') : t('themeDay')}
+              {settings.theme === 'light' ? <Moon size={20} strokeWidth={1.75} /> : <Sun size={20} strokeWidth={1.75} />}
+              <span className="tg-theme-label">{settings.theme === 'light' ? t('themeNight') : t('themeDay')}</span>
             </button>
             <LangSwitch compact />
             <button type="button" className="btn ghost icon-btn" onClick={() => setMoreOpen(true)} aria-label={t('moreMenu')}>
@@ -118,7 +120,7 @@ export function Layout({ children }) {
           <User size={22} /> {t('profile')}
         </NavLink>
       </nav>
-      {onLesson ? null : <AiTeacher />}
+      <AiTeacher />
       {toast && <div className="glass toast">{toast.text}</div>}
       {ach && (
         <div className="glass achv-pop" onAnimationEnd={shiftAchievement} onClick={shiftAchievement}>
