@@ -588,16 +588,23 @@ button { cursor: pointer; }
   grid-template-columns: 1fr 1fr;
   min-height: 420px;
   overflow: hidden;
+  background: #0c1222;
+  color: #e8eefc;
+}
+[data-theme='light'] .editor.glass {
+  background: #0c1222;
+  color: #e8eefc;
 }
 .editor.stack { grid-template-columns: 1fr; }
 .tabs { display: flex; gap: 6px; padding: 10px; }
 .tabs button, .icon-btn {
-  background: rgba(255,255,255,.05);
-  border: 1px solid var(--stroke);
+  background: rgba(255,255,255,.06);
+  color: #e8eefc;
+  border: 1px solid rgba(110, 231, 255, 0.28);
   border-radius: 10px;
   padding: 6px 10px;
 }
-.tabs button.on { background: rgba(110,231,255,.16); }
+.tabs button.on { background: rgba(110,231,255,.16); color: #6ee7ff; }
 .code-wrap {
   display: grid;
   grid-template-columns: 40px 1fr;
@@ -917,11 +924,11 @@ button { cursor: pointer; }
   color: #061018;
 }
 [data-theme='light'] .editor-mobile-switch {
-  background: #e8eef8;
-  border-color: rgba(3, 105, 161, 0.28);
+  background: #070b14;
+  border-color: rgba(110, 231, 255, 0.28);
 }
-[data-theme='light'] .editor-mobile-switch button { color: #475569; }
-[data-theme='light'] .editor-mobile-switch button.on { color: #fff; }
+[data-theme='light'] .editor-mobile-switch button { color: #93a0c0; }
+[data-theme='light'] .editor-mobile-switch button.on { color: #061018; }
 
 @media (max-width: 960px) {
   .shell { grid-template-columns: 1fr; }
