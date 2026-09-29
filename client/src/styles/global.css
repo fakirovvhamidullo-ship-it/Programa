@@ -738,13 +738,27 @@ button { cursor: pointer; }
   justify-content: center;
   gap: 10px;
   border-radius: 999px;
-  padding: 12px 16px;
-  background: #fff;
-  color: #1f1f1f;
+  padding: 12px 20px;
   font-weight: 700;
-  border: 1px solid #dadce0;
+  color: var(--text);
+  background:
+    linear-gradient(var(--bg-2), var(--bg-2)) padding-box,
+    linear-gradient(90deg, var(--cyan), var(--violet)) border-box;
+  border: 1px solid transparent;
+  box-shadow: 0 0 22px rgba(110, 231, 255, 0.16);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
-.google-btn:disabled { opacity: 0.6; }
+.google-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(167, 139, 250, 0.28);
+}
+.google-btn:disabled { opacity: 0.6; transform: none; }
+.google-word {
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
 .auth-or {
   display: grid;
   grid-template-columns: 1fr auto 1fr;

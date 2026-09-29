@@ -130,7 +130,12 @@ export default function Auth() {
           </Button>
         </div>
         <button type="button" className="google-btn" onClick={signInGoogle} disabled={googleBusy}>
-          <GoogleMark /> {t('googleLogin')}
+          <GoogleMark />
+          <span>
+            {t('googleLogin').split('Google')[0]}
+            <span className="google-word">Google</span>
+            {t('googleLogin').split('Google')[1] || ''}
+          </span>
         </button>
         <div className="auth-or">{t('authOr')}</div>
         {users.length > 0 && (
